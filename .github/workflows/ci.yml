@@ -1,4 +1,4 @@
-name: CI on Self‑Hosted
+name: CI on Self-Hosted
 
 on:
   push:
