@@ -1,0 +1,25 @@
+name: CI on Self‑Hosted
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-run:
+    name: Build Docker image and run
+    runs-on: [ self-hosted-arm ]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: |
+          docker build -t test-runner-demo:${{ github.sha }} .
+
+      - name: Run container
+        run: |
+          docker run --rm test-runner-demo:${{ github.sha }}
+
+      - name: Verify output
+        run: |
+          echo "::notice::If you see the 'Hello from self-hosted runner' message above, runner works!"
