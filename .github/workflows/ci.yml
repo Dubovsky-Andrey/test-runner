@@ -27,6 +27,14 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Verify GHCR login
+        run: |
+            if ! docker info 2>/dev/null | grep -q '^ Username:'; then
+            echo "[Error] Docker not login GHCR" >&2
+            exit 1
+            fi
+            echo "[Info] Login in GHCR approve"
+
       - name: Set lowercase owner
         run: |
           echo "OWNER=$(echo '${{ github.repository_owner }}' \
