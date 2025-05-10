@@ -18,7 +18,7 @@ jobs:
       - name: Show files
         run: ls -R .
 
-      - name: Set up QEMU (optional)
+      - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
       - name: Set up Docker Buildx
