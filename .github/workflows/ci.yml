@@ -2,14 +2,15 @@ name: Build, Test & Publish Docker image
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
+
 permissions:
   contents: read
   packages: write
 
 jobs:
   build-test-push:
-    runs-on: [ self-hosted, linux ]
+    runs-on: [self-hosted, linux]
 
     steps:
       - uses: actions/checkout@v4
@@ -27,20 +28,21 @@ jobs:
         uses: docker/login-action@v2
         with:
           registry: ghcr.io
-          username: ${{ github.repository_owner }}
+          username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Verify GHCR login
+
+      - name: Verify login to GHCR
         run: |
-            if ! docker info 2>/dev/null | grep -q '^ Username:'; then
-            echo "[Error] Docker not login GHCR" >&2
+          if ! grep -q '"ghcr.io"' ~/.docker/config.json; then
+            echo "[Error] Docker not logged in to GHCR" >&2
+            cat ~/.docker/config.json
             exit 1
-            fi
-            echo "[Info] Login in GHCR approve"
+          fi
+          echo "[Info] Logged in to GHCR successfully"
 
       - name: Set lowercase owner
         run: |
-          echo "OWNER=$(echo '${{ github.repository_owner }}' \
-            | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+          echo "OWNER=$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
       - name: Build and push image
         uses: docker/build-push-action@v4
@@ -54,8 +56,7 @@ jobs:
 
       - name: Run container to verify
         run: |
-          docker run --rm \
-            ghcr.io/${{ env.OWNER }}/test-runner-demo:${{ github.sha }}
+          docker run --rm ghcr.io/${{ env.OWNER }}/test-runner-demo:${{ github.sha }}
 
       - name: Success notice
         run: echo "::notice::Image pushed and verified!"
