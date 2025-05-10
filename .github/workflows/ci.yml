@@ -54,9 +54,13 @@ jobs:
             ghcr.io/${{ env.OWNER }}/test-runner-demo:${{ github.sha }}
             ghcr.io/${{ env.OWNER }}/test-runner-demo:latest
 
-      - name: Run container to verify
+      - name: Verify container can start (CI mode)
         run: |
-          docker run --rm ghcr.io/${{ env.OWNER }}/test-runner-demo:${{ github.sha }}
+          # run container in CI
+          docker run --rm \
+            -e CI=true \
+            ghcr.io/${{ env.OWNER }}/test-runner-demo:${{ github.sha }}
+          echo "::notice::Container started successfully in CI mode"
 
       - name: Success notice
         run: echo "::notice::Image pushed and verified!"
