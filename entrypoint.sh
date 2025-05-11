@@ -18,9 +18,9 @@ for i in $(seq 1 20); do
   sleep 2
 done
 
-nordvpn set killswitch on
-nordvpn set autoconnect on
-nordvpn whitelist add subnet 10.244.0.0/16
+#nordvpn set killswitch on
+#nordvpn set autoconnect on
+#nordvpn whitelist add subnet 10.244.0.0/16
 
 #sysctl -w net.ipv4.ip_forward=1
 #iptables -t nat -A POSTROUTING -o nordlynx -j MASQUERADE
