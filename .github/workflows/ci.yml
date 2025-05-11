@@ -11,7 +11,7 @@ permissions:
 jobs:
   build-test-push:
     runs-on: [self-hosted, linux]
-
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
 
