@@ -12,7 +12,7 @@ RUN echo "tzdata tzdata/Areas select Etc" | debconf-set-selections \
  && echo "tzdata tzdata/Zones/Etc select UTC" | debconf-set-selections \
  && apt-get update \
  && apt-get upgrade -y \
- && apt-get install -y --no-install-recommends procps\
+ && apt-get install -y --no-install-recommends \
       curl \
       dbus \
       tzdata \
@@ -23,11 +23,16 @@ RUN echo "tzdata tzdata/Areas select Etc" | debconf-set-selections \
       libnl-3-200 \
       libnl-genl-3-200 \
       libxml2 \
+      procps \
       apt-transport-https \
-      gnupg \
+      ca-certificates \
+      gnupg2 \
+      lsb-release \
  && rm -rf /var/lib/apt/lists/* \
+ \
+ # 3. Установить NordVPN CLI (через bash, чтобы скрипт точно сработал)
  && curl -sSf https://downloads.nordcdn.com/apps/linux/install.sh \
-      | sh -s -- -n
+      | bash -s -- -n
 
 # 3. Copy the entrypoint script
 COPY --chmod=0755 entrypoint.sh /usr/local/bin/entrypoint.sh
