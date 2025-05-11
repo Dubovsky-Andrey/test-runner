@@ -1,12 +1,27 @@
-#!/usr/bin/env bash
-# ========== entrypoint.sh ==========
-set -euo pipefail
+#!/bin/bash
+set -e
+export DEBIAN_FRONTEND=noninteractive
 
-# If in CI, skip VPN steps
-if [ "${CI:-false}" = "true" ]; then
-  echo "[Info] CI mode → skipping runtime"
-  exit 0
-fi
+mkdir -p /run/dbus
+dbus-daemon --system --fork
 
-# keep container alive
+nordvpnd &
+sleep 5
+
+for i in $(seq 1 20); do
+  if [ -S /run/nordvpn/nordvpnd.sock ]; then
+    echo "nordvpnd socket ready"
+    break
+  fi
+  echo "waiting for nordvpnd.sock"
+  sleep 2
+done
+
+nordvpn set killswitch on
+nordvpn set autoconnect on
+nordvpn whitelist add subnet 10.244.0.0/16
+
+sysctl -w net.ipv4.ip_forward=1
+iptables -t nat -A POSTROUTING -o nordlynx -j MASQUERADE
+
 exec tail -f /dev/null
