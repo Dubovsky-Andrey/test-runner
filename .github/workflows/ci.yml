@@ -56,8 +56,10 @@ jobs:
 
       - name: Verify container can start (CI mode)
         run: |
-          # run container in CI
           docker run --rm \
+            --privileged \
+            --cap-add=NET_ADMIN \
+            --cap-add=SYS_MODULE \
             -e CI=true \
             ghcr.io/${{ env.OWNER }}/test-runner-demo:${{ github.sha }}
           echo "::notice::Container started successfully in CI mode"
