@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 export DEBIAN_FRONTEND=noninteractive
 
 ls /usr/local/bin/
@@ -14,3 +14,4 @@ timeout 60s bash -c '
     sleep 2
     echo "[INFO] Waiting for nordvpnd.sock ready"
   done
+'
