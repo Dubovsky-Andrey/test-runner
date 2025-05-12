@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eu
+set -euo pipefail
 export DEBIAN_FRONTEND=noninteractive
 
 ls /usr/local/bin/
