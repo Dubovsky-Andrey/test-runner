@@ -9,5 +9,8 @@ dbus-daemon --system --fork
 nordvpnd &
 sleep 5
 
-timeout 120s bash -c 'while [ ! -S /run/nordvpn/nordvpnd.sock ]; do sleep 2; echo "[INFO] Waiting for nordvpnd.sock ready"; done'
-echo "[INFO] Nordvpnd socket ready
+timeout 60s bash -c '
+  until sockstat -n | grep -q "/run/nordvpn/nordvpnd.sock"; do
+    sleep 2
+    echo "[INFO] Waiting for nordvpnd.sock ready"
+  done
